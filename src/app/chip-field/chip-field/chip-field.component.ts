@@ -21,6 +21,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = 'Select Options';
   @Input() options: Control[];
   @Input() maxLen: number;
+  @Input() removable = true;
+  selected: [];
   @ViewChild('input', { static: true }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
   onChange: any = () => { };
@@ -30,6 +32,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    console.log(this.removable)
     this.form = this.fb.group({
       control: ['']
     })
@@ -96,7 +99,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(val: string) {
-    this.form.controls['control'].setValue(val);
+    this.control.setValue(val);
   }
 
   setDisabledState(isDisabled: boolean) {
