@@ -1,8 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material/chips';
-export interface Language {
+export interface Control {
   key: string;
   value: string
 }
@@ -19,28 +18,28 @@ export interface Language {
   ]
 })
 export class ChipFieldComponent implements OnInit, ControlValueAccessor {
-  @Input() placeholder = 'Select Language';
-  @Input() languageOptions: Language[];
+  @Input() placeholder = 'Select Options';
+  @Input() options: Control[];
   @Input() maxLen: number;
-  @ViewChild('languageInput', { static: true }) input: ElementRef<HTMLInputElement>;
+  @ViewChild('input', { static: true }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
-  filteredLanguages: any;
+  filteredOptions: any;
   disabled = false;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      language: ['']
+      control: ['']
     })
     this.form.valueChanges.subscribe(form => {
       console.log('in', form)
-      this.onChange(form.language)
+      this.onChange(form.control)
     })
   }
-  get languages() {
-    return this.form.get('language');
+  get control() {
+    return this.form.get('control');
   }
 
   add(event: MatChipInputEvent): void {
@@ -58,34 +57,35 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     // }
   }
 
-  remove(lang: Language): void {
-    const index = this.languages.value.findIndex((language: Language) => language.key === lang.key);
+  remove(chip: Control): void {
+    const index = this.control.value.findIndex((ctr: Control) => ctr.key === chip.key);
     if (index >= 0) {
-      this.languages.value.splice(index, 1);
       this.changeInput('');
-      this.onChange(this.languages.value);
-      // this.disabled = false;
+      this.control.value.splice(index, 1);
+      this.onChange(this.control.value);
+      this.disabled = false;
     }
   }
 
-  changeInput(key) {
-    this.filteredLanguages = this.filterFruit(key);
+  changeInput(key: string) {
+    this.filteredOptions = this.filterOption(key);
   }
 
-  filterFruit(key) {
+  filterOption(key: string) {
     if (key === '') {
-      return this.languageOptions;
+      console.log(this.options)
+      return this.options;
     } else {
-      return this.languageOptions.filter(f => (f.value).toLowerCase().includes(key.toLowerCase()));
+      return this.options.filter(f => (f.value).toLowerCase().includes(key.toLowerCase()));
     }
   }
   onSelect(event) {
     const value = event.option.value;
-    this.languages.setValue([...this.languages.value, value]);
+    this.control.setValue([...this.control.value, value]);
     this.input.nativeElement.value = '';
-    // if (this.fruits.value.length === this.maxLen) {
-    //   this.disabled = true;
-    // }
+    if (this.control.value.length === this.maxLen) {
+      this.disabled = true;
+    }
   }
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
@@ -96,6 +96,10 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(val: string) {
-    this.form.controls['language'].setValue(val);
+    this.form.controls['control'].setValue(val);
+  }
+
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
   }
 }
