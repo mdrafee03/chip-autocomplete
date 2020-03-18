@@ -21,6 +21,6 @@ export class AppComponent implements OnInit {
       languages: [null]
     })
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
-    this.formGroup.controls['languages'].setValue([this.languageOptions[1]]);
+    // this.formGroup.controls['languages'].setValue([this.languageOptions[1]]);
   }
 }

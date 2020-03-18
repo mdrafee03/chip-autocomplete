@@ -34,6 +34,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    this.changeInput('');
     this.form = this.fb.group({
       control: [''],
     })
@@ -83,7 +84,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
   onSelect(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
-    this.control.setValue([...this.control.value, value]);
+    this.control.setValue([...this.control.value || [], value]);
     this.input.nativeElement.value = '';
     if (this.control.value.length === this.maxLen) {
       this.disabled = true;
@@ -92,7 +93,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   disableSelected = (option) => {
-    return this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
+    return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
   }
 
   registerOnTouched(fn: any): void {
