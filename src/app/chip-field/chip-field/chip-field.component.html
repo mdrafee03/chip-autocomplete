@@ -10,7 +10,7 @@
                 [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)" required
                 [disabled]="disabled">
             <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
-                <mat-option *ngFor="let ctr of filteredOptions" [value]="ctr">
+                <mat-option *ngFor="let ctr of filteredOptions" [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
                     {{ ctr[displayWith] }}
                 </mat-option>
             </mat-autocomplete>

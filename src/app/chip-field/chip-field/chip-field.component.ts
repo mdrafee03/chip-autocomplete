@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -6,6 +6,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
   selector: 'app-chip-field',
   templateUrl: './chip-field.component.html',
   styleUrls: ['./chip-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -20,8 +21,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() maxLen: number;
   @Input() removable = true;
   @Input() displayWith = 'value';
-  @Input() itemId = 'key'
-  selected: [];
+  @Input() itemId = 'key';
+  @Input() disabledSelected = true;
   @ViewChild('input', { static: true }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
   onChange: any = () => { };
@@ -85,7 +86,13 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     if (this.control.value.length === this.maxLen) {
       this.disabled = true;
     }
+    // console.log(this.input.nativeElement)
   }
+
+  disableSelected = (option) => {
+    return this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
+  }
+
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
