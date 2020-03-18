@@ -1,6 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-chip-field',
@@ -23,12 +24,13 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
-  @ViewChild('input', { static: true }) input: ElementRef<HTMLInputElement>;
+  @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
   filteredOptions: any;
   disabled = false;
+  
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -79,7 +81,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       return this.options.filter(f => (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
     }
   }
-  onSelect(event) {
+  onSelect(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
     this.control.setValue([...this.control.value, value]);
     this.input.nativeElement.value = '';
