@@ -1,8 +1,23 @@
-<form [formGroup]="form">
-    <mat-form-field>
-        <mat-select formControlName="language">
-            <mat-label>{{placeholder}}</mat-label>
+<form [formGroup]="form" class="form">
+    <mat-form-field class="form-element">
+        <mat-chip-list #chipList formControlName="language">
+            <mat-chip *ngFor="let language of languages.value" [removable]="true" (removed)="remove(language)">
+                {{ language.value }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <!-- <mat-label>Fruits</mat-label> -->
+            <input #languageInput matInput [placeholder]="placeholder" (input)="changeInput($event.target.value)"
+                [matChipInputFor]="chipList" [matAutocomplete]="language" (matChipInputTokenEnd)="add($event)" required
+                [disabled]="disabled">
+            <mat-autocomplete #language="matAutocomplete" (optionSelected)="onSelect($event)">
+                <mat-option *ngFor="let language of filteredLanguages" [value]="language">
+                    {{ language.value }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-chip-list>
+        <!-- <mat-select formControlName="language">
+            <mat-label>{{ placeholder }}</mat-label>
             <mat-option *ngFor="let lang of languageOptions" [value]="lang.key"> {{lang.value}}</mat-option>
-        </mat-select>
+        </mat-select> -->
     </mat-form-field>
 </form>

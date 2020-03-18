@@ -1,4 +1,8 @@
 <form [formGroup]="formGroup">
-    <app-chip-field placeholder="select language" formControlName="languages" [languageOptions]="languageOptions"></app-chip-field>
+    <app-chip-field 
+        placeholder="select language" 
+        formControlName="languages" 
+        [languageOptions]="languageOptions"
+        [maxLen]="maxLanguage">
+    </app-chip-field>
 </form>
-<button (click)="log()">Button</button>

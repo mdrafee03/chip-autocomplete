@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   formGroup: FormGroup;
+  maxLanguage = 2;
   languageOptions = [
     {key: 'bn', value: 'Bangla'},
     {key: 'en', value: 'English'},
@@ -19,10 +20,7 @@ export class AppComponent implements OnInit {
     this.formGroup = this.fb.group({
       languages: [null]
     })
-    this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log(res))
-    this.formGroup.controls['languages'].setValue('bn')
-  }
-  log() {
-    console.log(this.formGroup.value)
+    this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
+    this.formGroup.controls['languages'].setValue([{key: 'bn', value: 'Bangla'}]);
   }
 }
