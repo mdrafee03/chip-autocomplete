@@ -5,12 +5,11 @@
                 {{ ctr[displayWith] }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
-            <!-- <mat-label>Fruits</mat-label> -->
             <input #input matInput [placeholder]="placeholder" (input)="changeInput($event.target.value)"
                 [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)" required
                 [disabled]="disabled">
             <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
-                <mat-option *ngFor="let ctr of filteredOptions" [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
+                <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))" [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
                     {{ ctr[displayWith] }}
                 </mat-option>
             </mat-autocomplete>

@@ -1,5 +1,8 @@
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { LanguageService } from './language.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -9,18 +12,35 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class AppComponent implements OnInit {
   formGroup: FormGroup;
   maxLanguage = 2;
+  clientSideFilter = false;
+  filteredOptions$: Observable<any>;
   languageOptions = [
-    {id: 'bn', name: 'Bangla'},
-    {id: 'en', name: 'English'},
-    {id: 'de', name: 'German'}
-  ]
-  constructor(private fb: FormBuilder) { }
+    {code: 'bn', name: 'Bangla'},
+    {code: 'en', name: 'English'},
+    {code: 'de', name: 'German'}
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private service: LanguageService) { }
 
   ngOnInit() {
     this.formGroup = this.fb.group({
       languages: [null]
     })
+    if (!this.clientSideFilter) {
+      this.onChangeSearchkey('');
+    }
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
-    // this.formGroup.controls['languages'].setValue([this.languageOptions[1]]);
+    this.formGroup.controls['languages'].setValue([{"code":"ab","name":"Abkhaz","nativeName":"аҧсуа"}]);
+  }
+  onChangeSearchkey(event){
+    if (event === '') {
+      this.filteredOptions$ = this.service.languages$
+    } else {
+      this.filteredOptions$ = this.service.languages$.pipe(
+        map(languages => languages.filter(lang => (lang.name).toLowerCase().includes(event)))
+      )
+    }
   }
 }

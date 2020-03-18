@@ -1,12 +1,15 @@
 <form [formGroup]="formGroup">
     <app-chip-field 
         placeholder="select language" 
-        formControlName="languages" 
+        formControlName="languages"
+        [clientSideFilter]="clientSideFilter"
+        [filteredOptions$]="filteredOptions$"
         [options]="languageOptions"
         [maxLen]="maxLanguage"
         [removable]="true"
         displayWith="name"
-        itemId="id"
-        [disabledSelected]="true">
+        itemId="code"
+        [disabledSelected]="true"
+        (changeSearchkey)="onChangeSearchkey($event)">
     </app-chip-field>
 </form>

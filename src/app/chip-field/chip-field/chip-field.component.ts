@@ -1,8 +1,8 @@
-import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-chip-field',
   templateUrl: './chip-field.component.html',
@@ -18,19 +18,22 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 })
 export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = 'Select Options';
+  @Input() clientSideFilter = true;
   @Input() options: any[];
   @Input() maxLen: number;
   @Input() removable = true;
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
+  @Input() filteredOptions$: Observable<any>;
+  @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
   filteredOptions: any;
   disabled = false;
-  
+
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -72,15 +75,12 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   changeInput(key: string) {
-    this.filteredOptions = this.filterOption(key);
+    this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.changeSearchkey.emit(key)
   }
 
   filterOption(key: string) {
-    if (key === '') {
-      return this.options;
-    } else {
-      return this.options.filter(f => (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
-    }
+    return (key === '') ? this.options : this.options.filter(f =>
+      (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
   onSelect(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
