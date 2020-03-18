@@ -33,7 +33,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
     this.form = this.fb.group({
-      control: ['']
+      control: [''],
     })
     this.form.valueChanges.subscribe(form => {
       this.onChange(form.control)
@@ -86,7 +86,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     if (this.control.value.length === this.maxLen) {
       this.disabled = true;
     }
-    // console.log(this.input.nativeElement)
+    this.changeInput('');
   }
 
   disableSelected = (option) => {
