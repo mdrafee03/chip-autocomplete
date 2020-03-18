@@ -1,10 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-export interface Control {
-  key: string;
-  value: string
-}
+
 @Component({
   selector: 'app-chip-field',
   templateUrl: './chip-field.component.html',
@@ -19,9 +16,11 @@ export interface Control {
 })
 export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = 'Select Options';
-  @Input() options: Control[];
+  @Input() options: any[];
   @Input() maxLen: number;
   @Input() removable = true;
+  @Input() displayWith = 'value';
+  @Input() itemId = 'key'
   selected: [];
   @ViewChild('input', { static: true }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
@@ -32,12 +31,10 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log(this.removable)
     this.form = this.fb.group({
       control: ['']
     })
     this.form.valueChanges.subscribe(form => {
-      console.log('in', form)
       this.onChange(form.control)
     })
   }
@@ -60,8 +57,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     // }
   }
 
-  remove(chip: Control): void {
-    const index = this.control.value.findIndex((ctr: Control) => ctr.key === chip.key);
+  remove(chip): void {
+    const index = this.control.value.findIndex((ctr) => ctr[this.itemId] === chip[this.itemId]);
     if (index >= 0) {
       this.changeInput('');
       this.control.value.splice(index, 1);
@@ -76,10 +73,9 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   filterOption(key: string) {
     if (key === '') {
-      console.log(this.options)
       return this.options;
     } else {
-      return this.options.filter(f => (f.value).toLowerCase().includes(key.toLowerCase()));
+      return this.options.filter(f => (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
     }
   }
   onSelect(event) {

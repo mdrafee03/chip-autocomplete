@@ -10,9 +10,9 @@ export class AppComponent implements OnInit {
   formGroup: FormGroup;
   maxLanguage = 2;
   languageOptions = [
-    {key: 'bn', value: 'Bangla'},
-    {key: 'en', value: 'English'},
-    {key: 'de', value: 'German'}
+    {id: 'bn', name: 'Bangla'},
+    {id: 'en', name: 'English'},
+    {id: 'de', name: 'German'}
   ]
   constructor(private fb: FormBuilder) { }
 
@@ -21,6 +21,6 @@ export class AppComponent implements OnInit {
       languages: [null]
     })
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
-    this.formGroup.controls['languages'].setValue([{key: 'bn', value: 'Bangla'}]);
+    this.formGroup.controls['languages'].setValue([this.languageOptions[1]]);
   }
 }
