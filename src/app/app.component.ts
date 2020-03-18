@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   formGroup: FormGroup;
   maxLanguage = 2;
   clientSideFilter = false;
+  debounceTime = 1000;
   filteredOptions$: Observable<any>;
   languageOptions = [
     {code: 'bn', name: 'Bangla'},

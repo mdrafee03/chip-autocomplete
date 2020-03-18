@@ -10,6 +10,7 @@
         displayWith="name"
         itemId="code"
         [disabledSelected]="true"
+        [debounceTime]="debounceTime"
         (changeSearchkey)="onChangeSearchkey($event)">
     </app-chip-field>
 </form>

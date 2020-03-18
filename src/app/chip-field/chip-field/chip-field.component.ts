@@ -2,7 +2,8 @@ import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDete
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-chip-field',
   templateUrl: './chip-field.component.html',
@@ -26,6 +27,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
+  @Input() debounceTime = 500
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   onTouch: any = () => { };
@@ -33,7 +35,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   form: FormGroup;
   filteredOptions: any;
   disabled = false;
-
+  debounceHelper = new Subject();
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -44,6 +46,9 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     this.form.valueChanges.subscribe(form => {
       this.onChange(form.control)
     })
+    this.debounceHelper.pipe(
+      debounceTime(this.debounceTime)
+    ).subscribe((res: string) => this.changeSearchkey.emit(res));
   }
   get control() {
     return this.form.get('control');
@@ -75,7 +80,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   changeInput(key: string) {
-    this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.changeSearchkey.emit(key)
+    this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.debounceHelper.next(key)
   }
 
   filterOption(key: string) {
