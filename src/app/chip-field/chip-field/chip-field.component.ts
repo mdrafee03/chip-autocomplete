@@ -102,7 +102,10 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
   }
   chooseFirstOption() {
-    this.matAutocomplete.options.first.select();
+    if (this.control.value.some(ctr => ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
+    } else {
+      this.matAutocomplete.options.first.select();
+    }
   }
 
   registerOnTouched(fn: any): void {
