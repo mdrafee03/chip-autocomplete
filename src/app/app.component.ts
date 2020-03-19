@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   formGroup: FormGroup;
-  maxLanguage = 2;
+  maxLanguage = 3;
   clientSideFilter = false;
   debounceTime = 1000;
   filteredOptions$: Observable<any>;

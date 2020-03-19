@@ -30,7 +30,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() debounceTime = 500
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
-  @ViewChild(MatAutocomplete, { static: true}) matAutocomplete: MatAutocomplete;
+  @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
@@ -91,6 +91,10 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   onSelect(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
     this.control.setValue([...this.control.value || [], value]);
+    this.afterSelect();
+  }
+
+  afterSelect() {
     this.input.nativeElement.value = '';
     if (this.control.value.length === this.maxLen) {
       this.disabled = true;
@@ -102,12 +106,16 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
   }
   chooseFirstOption() {
-    if (this.control.value.some(ctr => ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
-    } else {
+    if (this.control.value.some(ctr => ctr[this.itemId] !== this.matAutocomplete.options.first.value[this.itemId])) {
       this.matAutocomplete.options.first.select();
     }
   }
-
+  onTabPressed(event) {
+    if (event.keyCode === 9 && this.control.value.some(ctr => ctr[this.itemId] !== this.matAutocomplete.options.first.value[this.itemId])) {
+      this.control.setValue([...this.control.value || [], this.matAutocomplete.options.first.value]);
+      this.afterSelect();
+    }
+  }
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }

@@ -6,8 +6,8 @@
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
             </mat-chip>
             <input #input matInput [placeholder]="placeholder" (input)="changeInput($event.target.value)"
-                [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)" required
-                [disabled]="disabled" (keyup.enter)="chooseFirstOption()">
+                [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)"
+                [disabled]="disabled" (keyup.enter)="chooseFirstOption()" (keydown)="onTabPressed($event)">
             <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
                 <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))" [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
                     {{ ctr[displayWith] }}
