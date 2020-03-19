@@ -23,6 +23,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() options: any[];
   @Input() maxLen: number;
   @Input() removable = true;
+  @Input() required = true;
   @Input() isOptionString = false;
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
@@ -53,7 +54,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       control: [''],
     })
     this.form.valueChanges.subscribe(form => {
-      this.onChange(form.control)
+      setTimeout(() => this.onChange(form.control), 0);
     })
     this.debounceHelper.pipe(
       debounceTime(this.debounceTime)
@@ -84,7 +85,11 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     if (index >= 0) {
       this.changeInput('');
       this.control.value.splice(index, 1);
-      this.onChange(this.control.value);
+      if (this.control.value.length === 0) {
+        this.control.setValue(null);
+      } else {
+        this.control.updateValueAndValidity();
+      }
       this.disabled = false;
     }
   }
