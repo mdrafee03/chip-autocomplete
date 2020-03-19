@@ -1,7 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 @Component({
@@ -30,6 +30,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() debounceTime = 500
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocomplete, { static: true}) matAutocomplete: MatAutocomplete;
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
@@ -80,7 +81,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   changeInput(key: string) {
-    this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.debounceHelper.next(key)
+    this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.debounceHelper.next(key);
   }
 
   filterOption(key: string) {
@@ -99,6 +100,9 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   disableSelected = (option) => {
     return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
+  }
+  chooseFirstOption() {
+    this.matAutocomplete.options.first.select();
   }
 
   registerOnTouched(fn: any): void {
