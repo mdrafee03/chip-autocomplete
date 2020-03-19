@@ -31,6 +31,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() filteredOptions$: Observable<any>;
   @Input() debounceTime = 500
   @Input() isTabKeyboardSeparator = false;
+  @Input() isChipAddFromInput = false;
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
@@ -46,15 +47,12 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    if (this.options && typeof (this.options[0] === 'object' && this.options[0] !== null)) {
-      this.isOptionString = false;
-    }
     this.changeInput('');
     this.form = this.fb.group({
       control: [''],
     })
     this.form.valueChanges.subscribe(form => {
-      setTimeout(() => this.onChange(form.control), 0);
+      setTimeout(() => this.onChange(form.control), 0);    
     })
     this.debounceHelper.pipe(
       debounceTime(this.debounceTime)
@@ -65,18 +63,17 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   add(event: MatChipInputEvent): void {
-    // const input = event.input;
-    // const value = event.value;
-    // console.log('event', event)
-
-    // // Add our fruit
-    // if ((value || '').trim()) {
-    //   this.languages.setValue([...this.languages.value, value.trim()]);
-    // }
-    // // Reset the input value
-    // if (input) {
-    //   input.value = '';
-    // }
+    if (this.isOptionString && this.isChipAddFromInput && !this.matAutocomplete.showPanel) {
+      const input = event.input;
+      const value = event.value;
+      if ((value || '').trim()) {
+        this.control.setValue([...this.control.value || [], value.trim()]);
+      }
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+    }
   }
 
   remove(chip): void {
@@ -104,6 +101,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
         (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
   onSelect(event: MatAutocompleteSelectedEvent) {
+    console.log(this.matAutocomplete)
     const value = event.option.value;
     this.control.setValue([...this.control.value || [], value]);
     this.afterSelect();
