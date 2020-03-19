@@ -7,9 +7,11 @@
             </mat-chip>
             <input #input matInput [placeholder]="placeholder" (input)="changeInput($event.target.value)"
                 [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)"
-                [disabled]="disabled" (keyup.enter)="chooseFirstOption()" (keydown)="onTabPressed($event)">
+                [disabled]="disabled" (keyup.enter)="chooseFirstOption()" (keyup.tab)="onTabPressed()"
+                (blur)="onBlur()" (focus)="changeInput('')" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
             <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
-                <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))" [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
+                <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
+                    [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
                     {{ ctr[displayWith] }}
                 </mat-option>
             </mat-autocomplete>

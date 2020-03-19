@@ -28,9 +28,11 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
   @Input() debounceTime = 500
+  @Input() isTabKeyboardSeparator = false;
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
+  separatorKeysCodes: number[] = [13, 9]
   onTouch: any = () => { };
   onChange: any = () => { };
   form: FormGroup;
@@ -106,16 +108,25 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
   }
   chooseFirstOption() {
-    if (this.control.value.some(ctr => ctr[this.itemId] !== this.matAutocomplete.options.first.value[this.itemId])) {
+    if (this.matAutocomplete.options.first && !this.control.value.some(ctr => 
+      ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
       this.matAutocomplete.options.first.select();
     }
   }
-  onTabPressed(event) {
-    if (event.keyCode === 9 && this.control.value.some(ctr => ctr[this.itemId] !== this.matAutocomplete.options.first.value[this.itemId])) {
-      this.control.setValue([...this.control.value || [], this.matAutocomplete.options.first.value]);
-      this.afterSelect();
+  onTabPressed() {
+    if (this.isTabKeyboardSeparator) {
+      if (this.matAutocomplete.options.first && this.control.value && !this.control.value.some(ctr =>
+        ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
+        this.control.setValue([...this.control.value || [], this.matAutocomplete.options.first.value]);
+        this.afterSelect();
+      }
     }
   }
+
+  onBlur() {
+    this.input.nativeElement.value = '';
+  }
+
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
