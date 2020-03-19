@@ -23,6 +23,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() options: any[];
   @Input() maxLen: number;
   @Input() removable = true;
+  @Input() isOptionString = false;
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
@@ -32,6 +33,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
+
   separatorKeysCodes: number[] = [13, 9]
   onTouch: any = () => { };
   onChange: any = () => { };
@@ -39,9 +41,13 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   filteredOptions: any;
   disabled = false;
   debounceHelper = new Subject();
+
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    if (this.options && typeof (this.options[0] === 'object' && this.options[0] !== null)) {
+      this.isOptionString = false;
+    }
     this.changeInput('');
     this.form = this.fb.group({
       control: [''],
@@ -73,7 +79,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   remove(chip): void {
-    const index = this.control.value.findIndex((ctr) => ctr[this.itemId] === chip[this.itemId]);
+    const index = this.control.value.findIndex((ctr) =>
+      this.isOptionString ? ctr[this.itemId] === chip[this.itemId] : ctr === chip);
     if (index >= 0) {
       this.changeInput('');
       this.control.value.splice(index, 1);
@@ -88,7 +95,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   filterOption(key: string) {
     return (key === '') ? this.options : this.options.filter(f =>
-      (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
+      this.isOptionString ? f.toLowerCase().includes(key.toLowerCase()) :
+        (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
   onSelect(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value;
@@ -105,24 +113,21 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   disableSelected = (option) => {
-    return this.control.value && this.control.value.some(ctr => ctr[this.itemId] === option[this.itemId])
+    return this.control.value && this.control.value.some(ctr =>
+      this.isOptionString ? ctr === option : ctr[this.itemId] === option[this.itemId]);
   }
-  chooseFirstOption() {
-    if (this.matAutocomplete.options.first && !this.control.value.some(ctr => 
-      ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
-      this.matAutocomplete.options.first.select();
-    }
-  }
-  onTabPressed() {
-    if (this.isTabKeyboardSeparator) {
-      if (this.matAutocomplete.options.first && this.control.value && !this.control.value.some(ctr =>
-        ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])) {
+  chooseFirstOption(keyCode) {
+    if (this.matAutocomplete.options.first && (!this.control.value || (this.control.value && !this.control.value.some(ctr =>
+      this.isOptionString ? ctr === this.matAutocomplete.options.first.value :
+        ctr[this.itemId] === this.matAutocomplete.options.first.value[this.itemId])))) {
+      if (keyCode === 'enter') {
+        this.matAutocomplete.options.first.select();
+      } else if (keyCode === 'tab') {
         this.control.setValue([...this.control.value || [], this.matAutocomplete.options.first.value]);
         this.afterSelect();
       }
     }
   }
-
   onBlur() {
     this.input.nativeElement.value = '';
   }

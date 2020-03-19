@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     {code: 'en', name: 'English'},
     {code: 'de', name: 'German'}
   ];
-
+  // languageOptions = ['Bangla', 'English', "German"];
   constructor(
     private fb: FormBuilder,
     private service: LanguageService) { }
@@ -33,7 +33,8 @@ export class AppComponent implements OnInit {
       this.onChangeSearchkey('');
     }
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
-    this.formGroup.controls['languages'].setValue([{"code":"ab","name":"Abkhaz","nativeName":"аҧсуа"}]);
+    // this.formGroup.controls['languages'].setValue(['Bangla']);
+    // this.formGroup.controls['languages'].setValue([{code: 'de', name: 'German'}])
   }
   onChangeSearchkey(event){
     if (event === '') {
