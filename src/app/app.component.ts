@@ -11,16 +11,16 @@ import { map } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   formGroup: FormGroup;
-  maxLanguage = 3;
+  maxLanguage = 4;
   clientSideFilter = true;
   debounceTime = 1000;
   filteredOptions$: Observable<any>;
-  // languageOptions = [
-  //   {code: 'bn', name: 'Bangla'},
-  //   {code: 'en', name: 'English'},
-  //   {code: 'de', name: 'German'}
-  // ];
-  languageOptions = ['Bangla', 'English', "German"];
+  languageOptions = [
+    {code: 'bn', name: 'Bangla'},
+    {code: 'en', name: 'English'},
+    {code: 'de', name: 'German'}
+  ];
+  // languageOptions = ['Bangla', 'English', "German"];
   constructor(
     private fb: FormBuilder,
     private service: LanguageService) { }
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     }
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
     // this.formGroup.controls['languages'].setValue(['Bangla']);
-    // this.formGroup.controls['languages'].setValue([{code: 'de', name: 'German'}])
+    this.formGroup.controls['languages'].setValue([{code: 'de', name: 'German'}])
   }
   onChangeSearchkey(event){
     if (event === '') {

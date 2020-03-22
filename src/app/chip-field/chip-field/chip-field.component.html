@@ -9,11 +9,23 @@
                 [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)"
                 [disabled]="disabled" (keyup.enter)="chooseFirstOption('enter')" (keyup.tab)="chooseFirstOption('tab')"
                 (blur)="onBlur()" (focus)="changeInput('')" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
-            <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
-                <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
-                    [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
-                    {{ isOptionString ? ctr : ctr[displayWith] }}
-                </mat-option>
+            <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
+                <ng-container *ngIf="!isOptionCheckable">
+                    <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
+                        [value]="ctr" [disabled]="disabledSelected && isSelected(ctr)">
+                        {{ isOptionString ? ctr : ctr[displayWith] }}
+                    </mat-option>
+                </ng-container>
+                <ng-container *ngIf="isOptionCheckable">
+                    <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
+                        [value]="ctr">
+                        <mat-checkbox [checked]="isSelected(ctr)"
+                            [disabled]="!isSelected(ctr) && control.value && control.value.length >= maxItems"
+                            (change)="toggleSelection(ctr)" (click)="$event.stopPropagation()">
+                            {{ isOptionString ? ctr : ctr[displayWith] }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
             </mat-autocomplete>
         </mat-chip-list>
     </mat-form-field>

@@ -126,6 +126,41 @@
           }
         }
       }
+    },
+    "chip-autocomplete": {
+      "projectType": "library",
+      "root": "projects/chip-autocomplete",
+      "sourceRoot": "projects/chip-autocomplete/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/chip-autocomplete/tsconfig.lib.json",
+            "project": "projects/chip-autocomplete/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/chip-autocomplete/src/test.ts",
+            "tsConfig": "projects/chip-autocomplete/tsconfig.spec.json",
+            "karmaConfig": "projects/chip-autocomplete/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/chip-autocomplete/tsconfig.lib.json",
+              "projects/chip-autocomplete/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "chip-form-field"

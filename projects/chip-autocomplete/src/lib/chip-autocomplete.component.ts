@@ -4,42 +4,42 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+
 @Component({
-  selector: 'app-chip-field',
-  templateUrl: './chip-field.component.html',
-  styleUrls: ['./chip-field.component.scss'],
+  selector: 'chip-autocomplete',
+  templateUrl: './chip-autocomplete.component.html',
+  styleUrls: ['./chip-autocomplete.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ChipFieldComponent),
+      useExisting: forwardRef(() => ChipAutocompleteComponent),
       multi: true
     }
   ]
 })
-export class ChipFieldComponent implements OnInit, ControlValueAccessor {
+export class ChipAutocompleteComponent implements OnInit {
   @Input() placeholder = 'Select Options';
   @Input() clientSideFilter = true;
   @Input() options: any[];
   @Input() maxItems: number;
   @Input() removable = true;
   @Input() required = true;
-  @Input() isOptionString = true;
+  @Input() isOptionString = false;
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
   @Input() debounceTime = 500
   @Input() isTabKeyboardSeparator = false;
-  @Input() isChipAddFromInput = false;
-  @Input() isOptionCheckable = false;
+  @Input() isChipAddFromInput = true;
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
 
   separatorKeysCodes: number[] = [13, 9]
-  onTouch: any = () => {};
-  onChange: any = () => {};
+  onTouch: any = () => { };
+  onChange: any = () => { };
   form: FormGroup;
   filteredOptions: any;
   disabled = false;
@@ -79,7 +79,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   remove(chip): void {
     const index = this.control.value.findIndex((ctr) =>
-      this.isOptionString ? ctr === chip : ctr[this.itemId] === chip[this.itemId]);
+      this.isOptionString ? ctr[this.itemId] === chip[this.itemId] : ctr === chip);
     if (index >= 0) {
       this.changeInput('');
       this.control.value.splice(index, 1);
@@ -101,7 +101,9 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       this.isOptionString ? f.toLowerCase().includes(key.toLowerCase()) :
         (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
-  onSelect(value) {
+  onSelect(event: MatAutocompleteSelectedEvent) {
+    console.log(this.matAutocomplete)
+    const value = event.option.value;
     this.control.setValue([...this.control.value || [], value]);
     this.afterSelect();
   }
@@ -114,7 +116,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     this.changeInput('');
   }
 
-  isSelected = (option) => {
+  disableSelected = (option) => {
     return this.control.value && this.control.value.some(ctr =>
       this.isOptionString ? ctr === option : ctr[this.itemId] === option[this.itemId]);
   }
@@ -127,15 +129,6 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       } else if (keyCode === 'tab') {
         this.control.setValue([...this.control.value || [], this.matAutocomplete.options.first.value]);
         this.afterSelect();
-      }
-    }
-  }
-  toggleSelection(option) {
-    if (this.isSelected(option)) {
-      this.remove(option);
-    } else {
-      if (this.control.value && this.control.value.length < this.maxItems) {
-        this.onSelect(option)
       }
     }
   }

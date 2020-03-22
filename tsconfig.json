@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "chip-autocomplete": [
+        "dist/chip-autocomplete"
+      ],
+      "chip-autocomplete/*": [
+        "dist/chip-autocomplete/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

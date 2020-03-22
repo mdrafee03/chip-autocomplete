@@ -1,0 +1,20 @@
+<form [formGroup]="form" class="form">
+  <mat-form-field class="form-element">
+      <mat-chip-list #chipList formControlName="control" [required]="required">
+          <mat-chip *ngFor="let ctr of control.value" [removable]="true" (removed)="remove(ctr)">
+              {{ isOptionString ? ctr : ctr[displayWith] }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input #input matInput [placeholder]="placeholder" (input)="changeInput($event.target.value)"
+              [matChipInputFor]="chipList" [matAutocomplete]="ref" (matChipInputTokenEnd)="add($event)"
+              [disabled]="disabled" (keyup.enter)="chooseFirstOption('enter')" (keyup.tab)="chooseFirstOption('tab')"
+              (blur)="onBlur()" (focus)="changeInput('')" [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+          <mat-autocomplete #ref="matAutocomplete" (optionSelected)="onSelect($event)">
+              <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
+                  [value]="ctr" [disabled]="disabledSelected && disableSelected(ctr)">
+                  {{ isOptionString ? ctr : ctr[displayWith] }}
+              </mat-option>
+          </mat-autocomplete>
+      </mat-chip-list>
+  </mat-form-field>
+</form>
