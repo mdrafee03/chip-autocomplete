@@ -1,7 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 @Component({
@@ -57,6 +57,13 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     this.debounceHelper.pipe(
       debounceTime(this.debounceTime)
     ).subscribe((res: string) => this.changeSearchkey.emit(res));
+    if (this.clientSideFilter) {
+      if (this.options.some(option => typeof(option) === 'string')) {
+        this.isOptionString = true;
+      } else {
+        this.isOptionString = false;
+      }
+    }
   }
   get control() {
     return this.form.get('control');
@@ -107,6 +114,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       this.isOptionString ? f.toLowerCase().includes(key.toLowerCase()) :
         (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
+
   onSelect(value) {
     this.control.setValue([...this.control.value || [], value]);
     this.afterSelect();
@@ -136,6 +144,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       }
     }
   }
+
   toggleSelection(option) {
     if (this.isSelected(option)) {
       this.remove(option);
@@ -145,6 +154,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       }
     }
   }
+
   onBlur() {
     this.input.nativeElement.value = '';
   }

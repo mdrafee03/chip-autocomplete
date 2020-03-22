@@ -7,13 +7,13 @@
         [options]="languageOptions"
         [maxItems]="maxLanguage"
         [removable]="true"
-        [isOptionString]="true"
+        [isOptionString]="false"
         [isChipAddFromInput]="false"
         [required]="true"
         displayWith="name"
         itemId="code"
         [disabledSelected]="true"
-        [isOptionCheckable]="false"
+        [isOptionCheckable]="true"
         [debounceTime]="debounceTime"
         (changeSearchkey)="onChangeSearchkey($event)">
     </app-chip-field>
