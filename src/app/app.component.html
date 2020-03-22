@@ -5,7 +5,6 @@
         [clientSideFilter]="clientSideFilter"
         [filteredOptions$]="filteredOptions$"
         [options]="languageOptions"
-        [maxItems]="maxLanguage"
         [removable]="true"
         [isOptionString]="false"
         [isChipAddFromInput]="true"
@@ -13,7 +12,7 @@
         displayWith="name"
         itemId="code"
         [disabledSelected]="true"
-        [isOptionCheckable]="true"
+        [isOptionCheckable]="false"
         [debounceTime]="debounceTime"
         (changeSearchkey)="onChangeSearchkey($event)">
     </app-chip-field>

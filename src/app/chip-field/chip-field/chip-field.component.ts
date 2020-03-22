@@ -21,7 +21,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = 'Select Options';
   @Input() clientSideFilter = true;
   @Input() options: any[];
-  @Input() maxItems: number;
+  @Input() maxItems = null;
   @Input() removable = true;
   @Input() required = true;
   @Input() isOptionString = true;
@@ -122,7 +122,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
 
   afterSelect() {
     this.input.nativeElement.value = '';
-    if (this.control.value.length === this.maxItems) {
+    if (this.maxItems && this.control.value.length === this.maxItems) {
       this.disabled = true;
     }
     this.changeInput('');
@@ -152,7 +152,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     if (this.isSelected(option)) {
       this.remove(option);
     } else {
-      if (!this.control.value || this.control.value.length < this.maxItems) {
+      if (!this.control.value || !this.maxItems ||this.control.value.length < this.maxItems) {
         this.onSelect(option)
       }
     }
