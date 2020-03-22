@@ -10,6 +10,15 @@
   padding: 5px 0px 25px 40px;
   width: 100%;
 }
+
+.mat-option {
+  padding: 0;
+  
+  .mat-checkbox {
+    padding: 0 16px;
+  }
+}
+
 .mat-option:first-child {
     background: rgba(0,0,0,.04);
 }

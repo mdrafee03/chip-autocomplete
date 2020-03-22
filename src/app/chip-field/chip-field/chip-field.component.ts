@@ -144,7 +144,10 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       }
     }
   }
-
+  clickCheckboxWrap($event, option) {
+    $event.stopPropagation();
+    this.toggleSelection(option);
+  }
   toggleSelection(option) {
     if (this.isSelected(option)) {
       this.remove(option);
