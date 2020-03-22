@@ -17,7 +17,7 @@
                     </mat-option>
                 </ng-container>
                 <ng-container *ngIf="isOptionCheckable">
-                    <mat-option *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
+                    <mat-option class="option-checkbox-wrap" *ngFor="let ctr of (clientSideFilter? filteredOptions : (filteredOptions$ | async))"
                         [value]="ctr">
                         <div (click)="clickCheckboxWrap($event, ctr)">
                             <mat-checkbox [checked]="isSelected(ctr)"

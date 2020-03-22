@@ -1,7 +1,7 @@
 import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -18,11 +18,11 @@ import { debounceTime } from 'rxjs/operators';
     }
   ]
 })
-export class ChipAutocompleteComponent implements OnInit {
-  @Input() placeholder = 'Select Options';
+export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
+  @Input() placeholder = 'Select';
   @Input() clientSideFilter = true;
   @Input() options: any[];
-  @Input() maxItems: number;
+  @Input() maxItems = null;
   @Input() removable = true;
   @Input() required = true;
   @Input() isOptionString = true;
@@ -123,7 +123,7 @@ export class ChipAutocompleteComponent implements OnInit {
 
   afterSelect() {
     this.input.nativeElement.value = '';
-    if (this.control.value.length === this.maxItems) {
+    if (this.maxItems && this.control.value.length === this.maxItems) {
       this.disabled = true;
     }
     this.changeInput('');
@@ -133,7 +133,6 @@ export class ChipAutocompleteComponent implements OnInit {
     return this.control.value && this.control.value.some(ctr =>
       this.isOptionString ? ctr === option : ctr[this.itemId] === option[this.itemId]);
   }
-  
   chooseFirstOption(keyCode) {
     if (this.matAutocomplete.options.first && (!this.control.value || (this.control.value && !this.control.value.some(ctr =>
       this.isOptionString ? ctr === this.matAutocomplete.options.first.value :
@@ -146,17 +145,15 @@ export class ChipAutocompleteComponent implements OnInit {
       }
     }
   }
-
   clickCheckboxWrap($event, option) {
     $event.stopPropagation();
     this.toggleSelection(option);
   }
-
   toggleSelection(option) {
     if (this.isSelected(option)) {
       this.remove(option);
     } else {
-      if (this.control.value && this.control.value.length < this.maxItems) {
+      if (!this.control.value || !this.maxItems ||this.control.value.length < this.maxItems) {
         this.onSelect(option)
       }
     }
