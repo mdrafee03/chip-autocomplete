@@ -30,7 +30,6 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
   @Input() debounceTime = 500
-  @Input() isTabKeyboardSeparator = false;
   @Input() isChipAddFromInput = false;
   @Input() isOptionCheckable = false;
   @Output() changeSearchkey = new EventEmitter<string>();
@@ -38,8 +37,8 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
 
   separatorKeysCodes: number[] = [13, 9]
-  onTouch: any = () => {};
-  onChange: any = () => {};
+  onTouch: any = () => { };
+  onChange: any = () => { };
   form: FormGroup;
   filteredOptions: any;
   disabled = false;
@@ -53,7 +52,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
       control: [''],
     })
     this.form.valueChanges.subscribe(form => {
-      setTimeout(() => this.onChange(form.control), 0);    
+      setTimeout(() => this.onChange(form.control), 0);
     })
     this.debounceHelper.pipe(
       debounceTime(this.debounceTime)
@@ -64,11 +63,18 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   add(event: MatChipInputEvent): void {
-    if (this.isOptionString && this.isChipAddFromInput && !this.matAutocomplete.showPanel) {
+    if (this.isChipAddFromInput && !this.matAutocomplete.showPanel) {
       const input = event.input;
       const value = event.value;
-      if ((value || '').trim()) {
-        this.control.setValue([...this.control.value || [], value.trim()]);
+      if (this.isOptionString) {
+        if ((value || '').trim()) {
+          this.control.setValue([...this.control.value || [], value.trim()]);
+        }
+      } else {
+        const obj = {};
+        obj[this.itemId] = value;
+        obj[this.displayWith] = value;
+        this.control.setValue([...this.control.value || [], obj]);
       }
       // Reset the input value
       if (input) {
