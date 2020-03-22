@@ -152,7 +152,7 @@ export class ChipFieldComponent implements OnInit, ControlValueAccessor {
     if (this.isSelected(option)) {
       this.remove(option);
     } else {
-      if (this.control.value && this.control.value.length < this.maxItems) {
+      if (!this.control.value || this.control.value.length < this.maxItems) {
         this.onSelect(option)
       }
     }

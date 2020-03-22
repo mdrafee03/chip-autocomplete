@@ -13,11 +13,12 @@
 
 .mat-option {
   padding: 0;
-  
-  .mat-checkbox {
-    padding: 0 16px;
-  }
 }
+
+.mat-option .mat-checkbox {
+  padding: 0 16px;
+}
+
 
 .mat-option:first-child {
     background: rgba(0,0,0,.04);

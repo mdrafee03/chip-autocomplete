@@ -1,6 +1,6 @@
 ## ChipAutocomplete
 
-chip-autocomplete formcontrol where you can create chips with autocomplete with clientside and server side option filtering.
+chip-autocomplete is a formcontrol where you can create chips with autocomplete with clientside and server side option filtering in Angular
 
 ## Getting Started
 

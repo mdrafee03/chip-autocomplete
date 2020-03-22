@@ -25,14 +25,14 @@ export class ChipAutocompleteComponent implements OnInit {
   @Input() maxItems: number;
   @Input() removable = true;
   @Input() required = true;
-  @Input() isOptionString = false;
+  @Input() isOptionString = true;
   @Input() displayWith = 'value';
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
   @Input() debounceTime = 500
-  @Input() isTabKeyboardSeparator = false;
-  @Input() isChipAddFromInput = true;
+  @Input() isChipAddFromInput = false;
+  @Input() isOptionCheckable = false;
   @Output() changeSearchkey = new EventEmitter<string>();
   @ViewChild('input', { static: false }) input: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocomplete, { static: true }) matAutocomplete: MatAutocomplete;
@@ -53,22 +53,36 @@ export class ChipAutocompleteComponent implements OnInit {
       control: [''],
     })
     this.form.valueChanges.subscribe(form => {
-      setTimeout(() => this.onChange(form.control), 0);    
+      setTimeout(() => this.onChange(form.control), 0);
     })
     this.debounceHelper.pipe(
       debounceTime(this.debounceTime)
     ).subscribe((res: string) => this.changeSearchkey.emit(res));
+    if (this.clientSideFilter) {
+      if (this.options.some(option => typeof(option) === 'string')) {
+        this.isOptionString = true;
+      } else {
+        this.isOptionString = false;
+      }
+    }
   }
   get control() {
     return this.form.get('control');
   }
 
   add(event: MatChipInputEvent): void {
-    if (this.isOptionString && this.isChipAddFromInput && !this.matAutocomplete.showPanel) {
+    if (this.isChipAddFromInput && !this.matAutocomplete.showPanel) {
       const input = event.input;
       const value = event.value;
-      if ((value || '').trim()) {
-        this.control.setValue([...this.control.value || [], value.trim()]);
+      if (this.isOptionString) {
+        if ((value || '').trim()) {
+          this.control.setValue([...this.control.value || [], value.trim()]);
+        }
+      } else {
+        const obj = {};
+        obj[this.itemId] = value;
+        obj[this.displayWith] = value;
+        this.control.setValue([...this.control.value || [], obj]);
       }
       // Reset the input value
       if (input) {
@@ -79,7 +93,7 @@ export class ChipAutocompleteComponent implements OnInit {
 
   remove(chip): void {
     const index = this.control.value.findIndex((ctr) =>
-      this.isOptionString ? ctr[this.itemId] === chip[this.itemId] : ctr === chip);
+      this.isOptionString ? ctr === chip : ctr[this.itemId] === chip[this.itemId]);
     if (index >= 0) {
       this.changeInput('');
       this.control.value.splice(index, 1);
@@ -101,9 +115,8 @@ export class ChipAutocompleteComponent implements OnInit {
       this.isOptionString ? f.toLowerCase().includes(key.toLowerCase()) :
         (f[this.displayWith]).toLowerCase().includes(key.toLowerCase()));
   }
-  onSelect(event: MatAutocompleteSelectedEvent) {
-    console.log(this.matAutocomplete)
-    const value = event.option.value;
+
+  onSelect(value) {
     this.control.setValue([...this.control.value || [], value]);
     this.afterSelect();
   }
@@ -116,10 +129,11 @@ export class ChipAutocompleteComponent implements OnInit {
     this.changeInput('');
   }
 
-  disableSelected = (option) => {
+  isSelected = (option) => {
     return this.control.value && this.control.value.some(ctr =>
       this.isOptionString ? ctr === option : ctr[this.itemId] === option[this.itemId]);
   }
+  
   chooseFirstOption(keyCode) {
     if (this.matAutocomplete.options.first && (!this.control.value || (this.control.value && !this.control.value.some(ctr =>
       this.isOptionString ? ctr === this.matAutocomplete.options.first.value :
@@ -132,6 +146,22 @@ export class ChipAutocompleteComponent implements OnInit {
       }
     }
   }
+
+  clickCheckboxWrap($event, option) {
+    $event.stopPropagation();
+    this.toggleSelection(option);
+  }
+
+  toggleSelection(option) {
+    if (this.isSelected(option)) {
+      this.remove(option);
+    } else {
+      if (this.control.value && this.control.value.length < this.maxItems) {
+        this.onSelect(option)
+      }
+    }
+  }
+
   onBlur() {
     this.input.nativeElement.value = '';
   }

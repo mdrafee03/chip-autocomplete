@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     }
     this.formGroup.controls['languages'].valueChanges.subscribe(res => console.log('root values', res))
     // this.formGroup.controls['languages'].setValue(['Bangla']);
-    this.formGroup.controls['languages'].setValue([{code: 'de', name: 'German'}])
+    // this.formGroup.controls['languages'].setValue([{code: 'de', name: 'German'}])
   }
   onChangeSearchkey(event){
     if (event === '') {

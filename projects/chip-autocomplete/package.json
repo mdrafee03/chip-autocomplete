@@ -1,6 +1,6 @@
 {
   "name": "chip-autocomplete",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "chip-autocomplete formcontrol where you can create chips with autocomplete with clientside and server side option filtering",
   "author": "Md. Rafee",
   "keywords": [
@@ -12,5 +12,8 @@
   "peerDependencies": {
     "@angular/common": "^8.2.14",
     "@angular/core": "^8.2.14"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
   }
 }
