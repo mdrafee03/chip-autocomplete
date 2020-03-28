@@ -1,27 +1,62 @@
-# ChipFormField
+## ChipAutocomplete
+Angular chip-autocomplete is a Formcontrol where you can create chips with autocomplete with clientside and server side option filtering which can be used with Reactive Forms as a normal formcontrol like <input> <select>
+## Demo
+check out [live demo](https://chip-autocomplete-example.stackblitz.io/)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
+code: [stackblitz](https://stackblitz.com/edit/chip-autocomplete-example)
+## Getting Started
 
-## Development server
+    npm i chip-autocomplete
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Configuration
 
-## Code scaffolding
+Install @angular/material, if you didn't installed already:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    npm add @angular/material
 
-## Build
+Ensure you import the module and the dependencies:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```javascript
+import { ChipAutocompleteModule } from 'chips-autocomplete';
+import { BrowserModule } from '@angular/platform-browser'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-## Running unit tests
+@NgModule({
+   imports: [
+       BrowserModule,
+       FormsModule,
+       ReactiveFormsModule,
+       ChipAutocompleteModule
+       ...OtherModules 
+   ] // along with your other modules
+})
+export class AppModule {}
+```
+## Implementation
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Use the component in any component:
 
-## Running end-to-end tests
+app.component.html
+```javascript
+<chip-autocomplete><chip-autocomplete>
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## API
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+| Features | Type | Default | Description |
+| ------ | ------ | -----| ------|
+| placeholder | string | 'Select' | String that sets the placeholder |
+| maxItems | number |  null | Sets the maximum number of chips |
+| removable | boolean | true | whether the chips are removable |
+| required | boolean | true | whether the field is required |
+| clientSideFilter | boolean | true | whether the dropdown is filtered by client side or server side. If the value is true (clientside), **options** is required. If the value is false (serverside), **filteredOptions$** Observable and **isOptionString**, **changeSearchKey** eventEmitter |
+| options | Array | |  dropdown Options: Array of strings Or Array of Object|
+| isOptionString | boolean | true | Whether the options are Strings or Object. In Cleint side filtering, it is not required, it can select automatically from options. But in server side filtering, it is required. |
+| displayWith | string | 'value' | If the options are objects, display property of that objects is required |
+| itemId | string | 'key' | if the options are objects, key property of that objects is required |
+| filteredOptions$ | Observable<any[]> | | Observable that fetch filtered Options from the server. It is required if it is server side filtering |
+| changeSearchKey | EventEmitter<string> | | Eventemitter with every key stroke, useful for server side filtering |
+| debounceTime | number | 500 | DebounceTime for server side filtering |
+| isChipAddFromInput | boolean | false | whether the text not found in dropdown is allowed to add to chips |
+| isOptionCheckable | boolean | false | whether Options can be added to chips with checkbox |
+| disabledSelected | boolean | true | Whether previously selected options will be disabled and prevent to select |

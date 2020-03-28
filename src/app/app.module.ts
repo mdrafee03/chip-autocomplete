@@ -1,35 +1,33 @@
-import { ChipFieldModule } from './chip-field/chip-field.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms'
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MaterialModule } from "./material.module";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import { HttpClientModule } from '@angular/common/http';
-import { ChipAutocompleteModule } from 'chip-autocomplete';
+import { AppComponent } from "./app.component";
+import { ChipAutocompleteModule } from "chip-autocomplete";
+import { HttpClientModule } from "@angular/common/http";
+import { ServerSideDropdownComponent } from "./server-side-dropdown/server-side-dropdown.component";
+import { ClientSideDropdownComponent } from "./client-side-dropdown/client-side-dropdown.component";
+import { RouterModule } from "@angular/router";
+import { AppRoutingModule } from "./app.routing.module";
 
 @NgModule({
   declarations: [
-    AppComponent
-  ],
+    AppComponent,
+    ServerSideDropdownComponent,
+    ClientSideDropdownComponent
+    ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
+    BrowserModule, 
+    BrowserAnimationsModule, 
+    MaterialModule, 
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    ChipFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    ChipAutocompleteModule
-  ],
-  providers: [],
+    ChipAutocompleteModule,
+    RouterModule,
+    AppRoutingModule
+    ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

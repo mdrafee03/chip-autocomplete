@@ -1,0 +1,48 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+	<chip-autocomplete [placeholder]="placeholder" formControlName="languages" [clientSideFilter]="clientsideFilter"
+		[options]="languageOptions" [maxItems]="maxLanguage" [removable]="removable"
+		[isChipAddFromInput]="isChipAddFromInput" [required]="required" [displayWith]="displayWith" [itemId]="itemid"
+		[isOptionCheckable]="isOptionCheckable" [disabledSelected]="disabledSelected"></chip-autocomplete>
+</form>
+
+
+<div>
+	<label>Required: </label>
+  <mat-radio-group [value]="required">
+	<mat-radio-button (click)="changeRequired(true)" [value]="true">True</mat-radio-button>
+	<mat-radio-button (click)="changeRequired(false)" [value]="false">False</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div>
+	<label>Removable Chip: </label>
+  <mat-radio-group [value]="removable">
+	<mat-radio-button (click)="changeRemovable(true)" [value]="true">True</mat-radio-button>
+	<mat-radio-button (click)="changeRemovable(false)" [value]="false">False</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div>
+	<label>Checkable dropdown: </label>
+  <mat-radio-group [value]="isOptionCheckable">
+	<mat-radio-button (click)="changeCheckable(true)" [value]="true">True</mat-radio-button>
+	<mat-radio-button (click)="changeCheckable(false)" [value]="false">False</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div>
+	<label>Chip Add from dropdown: </label>
+  <mat-radio-group [value]="isChipAddFromInput">
+	<mat-radio-button (click)="changeIsChipAdd(true)" [value]="true">True</mat-radio-button>
+	<mat-radio-button (click)="changeIsChipAdd(false)" [value]="false">False</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div>
+  <mat-form-field>
+    <input matInput placeholder="placeholder" [(ngModel)]="placeholder">
+  </mat-form-field>
+</div>
+<div>
+  <mat-form-field>
+    <input type="number" matInput placeholder="MaxItem" [(ngModel)]="maxLanguage">
+  </mat-form-field>
+  <mat-checkbox [checked]="maxLanguage === null" (change)="changeMaxItemsNullStatus()">No limit</mat-checkbox>
+</div>
+

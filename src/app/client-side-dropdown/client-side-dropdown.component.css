@@ -1,0 +1,20 @@
+.form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+  margin-right: 1rem;
+}
+div {
+  margin-bottom: 1rem;
+}
+.mat-radio-button {
+  margin-right: 1rem;
+}
+.form-element {
+  padding: 5px 0px 25px 40px;
+  width: 100%;
+}
+
+.button {
+  width: 100%;
+}

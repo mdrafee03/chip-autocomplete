@@ -16,4 +16,4 @@ export class LanguageService {
       shareReplay(1)
     )
   }
-} 
+} AbortController

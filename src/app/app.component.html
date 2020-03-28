@@ -1,19 +1,10 @@
-<form [formGroup]="formGroup">
-    <app-chip-field 
-        placeholder="select language" 
-        formControlName="languages"
-        [clientSideFilter]="clientSideFilter"
-        [filteredOptions$]="filteredOptions$"
-        [options]="languageOptions"
-        [removable]="true"
-        [isOptionString]="false"
-        [isChipAddFromInput]="true"
-        [required]="true"
-        displayWith="name"
-        itemId="code"
-        [disabledSelected]="true"
-        [isOptionCheckable]="true"
-        [debounceTime]="debounceTime"
-        (changeSearchkey)="onChangeSearchkey($event)">
-    </app-chip-field>
-</form>
+<mat-toolbar>
+	<a routerLink="client-side">Client Side Dropdown Filter</a>
+	<a routerLink="server-side">Server Side Dropdown Filter</a>
+</mat-toolbar>
+<div class="container">
+	<router-outlet></router-outlet>
+
+	** For other API please follow API Instruction:
+	<a target="_blank" href="https://www.npmjs.com/package/chip-autocomplete">chip placeholder</a> **
+</div>
