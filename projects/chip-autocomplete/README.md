@@ -46,6 +46,8 @@ app.component.html
 <chip-autocomplete><chip-autocomplete>
 ```
 
+You don't need ```<mat-form-field>``` around this control. It was given under the hood.
+
 ## API
 
 | Features | Type | Default | Description |

@@ -1,6 +1,6 @@
 {
   "name": "chip-autocomplete",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Angular chip-autocomplete Reactive Form Control where you can create chips with autocomplete with clientside and server side option filtering",
   "author": "Md. Rafee",
   "license": "MIT",
