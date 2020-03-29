@@ -1,9 +1,13 @@
 ## ChipAutocomplete
-Angular chip-autocomplete is a Formcontrol where you can create chips with autocomplete with clientside and server side option filtering which can be used with Reactive Forms as a normal formcontrol like <input> <select>
+
+Angular chip-autocomplete is a Formcontrol where you can create chips with autocomplete with clientside and server side option filtering which can be used with Reactive Forms as a normal formcontrol like ```<input>``` ```<select>```
+  
 ## Demo
-check out [live demo](https://chip-autocomplete-example.stackblitz.io/)
+
+### check out **[Live Demo](https://chip-autocomplete-example.stackblitz.io/)**
 
 code: [stackblitz](https://stackblitz.com/edit/chip-autocomplete-example)
+
 ## Getting Started
 
     npm i chip-autocomplete

@@ -22,7 +22,7 @@ export class ServerSideDropdownComponent implements OnInit {
   isOptionCheckable = false;
   disabledSelected = true;
   maxLanguage = 3;
-  debounceTime = 1000;
+  debounceTime = 500;
   filteredOptions$: Observable<any>;
   constructor(private fb: FormBuilder, private service: LanguageService) {}
 

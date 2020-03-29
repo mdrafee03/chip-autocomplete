@@ -2,8 +2,8 @@ import { Component, OnInit, forwardRef, Input, ViewChild, ElementRef, ChangeDete
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocomplete } from '@angular/material/autocomplete';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Observable, Subject, timer } from 'rxjs';
+import { distinctUntilChanged, debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'chip-autocomplete',
@@ -30,7 +30,7 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
   @Input() itemId = 'key';
   @Input() disabledSelected = true;
   @Input() filteredOptions$: Observable<any>;
-  @Input() debounceTime = 500
+  @Input() debounceTime = 500;
   @Input() isChipAddFromInput = false;
   @Input() isOptionCheckable = false;
   @Output() changeSearchkey = new EventEmitter<string>();
@@ -56,7 +56,8 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
       setTimeout(() => this.onChange(form.control), 0);
     })
     this.debounceHelper.pipe(
-      debounceTime(this.debounceTime)
+      debounce(() => timer(this.debounceTime)),
+      distinctUntilChanged()
     ).subscribe((res: string) => this.changeSearchkey.emit(res));
     if (this.clientSideFilter) {
       if (this.options.some(option => typeof(option) === 'string')) {
@@ -95,7 +96,7 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
     const index = this.control.value.findIndex((ctr) =>
       this.isOptionString ? ctr === chip : ctr[this.itemId] === chip[this.itemId]);
     if (index >= 0) {
-      this.changeInput('');
+      this.changeInput();
       this.control.value.splice(index, 1);
       if (this.control.value.length === 0) {
         this.control.setValue(null);
@@ -106,7 +107,7 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  changeInput(key: string) {
+  changeInput(key: string = '') {
     this.clientSideFilter ? this.filteredOptions = this.filterOption(key) : this.debounceHelper.next(key);
   }
 
@@ -126,7 +127,7 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
     if (this.maxItems && this.control.value.length === this.maxItems) {
       this.disabled = true;
     }
-    this.changeInput('');
+    this.changeInput();
   }
 
   isSelected = (option) => {
@@ -161,6 +162,7 @@ export class ChipAutocompleteComponent implements OnInit, ControlValueAccessor {
 
   onBlur() {
     this.input.nativeElement.value = '';
+    this.changeInput();
   }
 
   registerOnTouched(fn: any): void {
